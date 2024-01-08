@@ -6,7 +6,7 @@ settings:
 
 dependencies:
   '@ttoss/google-maps':
-    specifier: ^1.25.6
+    specifier: ^1.24.0
     version: 1.25.6(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
   '@ttoss/ui':
     specifier: ^4.0.7

@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ttoss/google-maps": "^1.25.6",
+    "@ttoss/google-maps": "^1.24.0",
     "@ttoss/ui": "^4.0.7",
     "geotiff": "^2.1.0",
     "geotiff-geokeys-to-proj4": "^2022.9.7",
