@@ -3,19 +3,25 @@ import { useGoogleMaps, useMap } from "@ttoss/google-maps";
 import { Box, Flex } from "@ttoss/ui";
 import React from "react";
 import ReactJson from "react-json-view";
+import { SearchInputPlace } from "./SearchInputPlace";
+import SolarPotentialForm from "./SolarPotentialForm";
 
 function App() {
   const { ref, map } = useMap();
-  const { status } = useGoogleMaps();
+  const { status: statusMap } = useGoogleMaps();
 
   const [location, setLocation] = React.useState<any>({
-    // Rinconada Library
+    // Endereço USA:Rinconada Library
     lat: 37.4449739,
     lng: -122.13914659999998,
+
+    // Endereço BR-RJ: Clube Naval Piraquê
+    // lat: -22.9679557,
+    // lng: -43.216478,
   });
 
-  const [buildingInsights, setBuildingInsights] = React.useState<any>({});
-  const [dataLayers, setDataLayers] = React.useState<any>({});
+  const [buildingInsights, setBuildingInsights] = React.useState<any>(null);
+  const [dataLayers, setDataLayers] = React.useState<any>(null);
 
   const getBuildingInsights = async () => {
     try {
@@ -77,7 +83,7 @@ function App() {
   };
 
   React.useEffect(() => {
-    if (dataLayers.maskUrl) {
+    if (dataLayers?.maskUrl) {
       getDataBasedInUrl(dataLayers.maskUrl);
       console.log(
         "prepareGetGeoTiffUrl:::",
@@ -92,7 +98,7 @@ function App() {
   }, [location]);
 
   React.useEffect(() => {
-    if (status === "ready" && map) {
+    if (statusMap === "ready" && map) {
       map.setCenter(location);
 
       map.setZoom(20);
@@ -107,35 +113,48 @@ function App() {
         setLocation(latLng);
       });
     }
-  }, [status]);
+  }, [statusMap]);
 
   return (
-    <Flex
-      sx={{
-        paddingY: "2xl",
-        paddingX: "md",
-        gap: "lg",
-        width: "100%",
-        overflow: "hidden",
-      }}
-    >
-      <Box ref={ref} style={{ height: 640, width: 860 }} />
+    <Flex sx={{ flexDirection: "column", backgroundColor: "#FFFBFE" }}>
+      <Flex sx={{}}>
+        <Box ref={ref} sx={{ height: 750, width: "100%", maxWidth: "70vw" }} />
+        <Box sx={{ width: "30vw", padding: "2xl" }}>
+          <SearchInputPlace />
 
+          {!!buildingInsights && !!dataLayers && (
+            <SolarPotentialForm
+              solarData={{ ...buildingInsights, ...dataLayers }}
+            />
+          )}
+        </Box>
+      </Flex>
       <Flex
         sx={{
-          overflowY: "scroll",
-          flex: "1",
-          wordBreak: "break-all",
-          "& > *": {
-            width: "100%",
-          },
+          paddingY: "2xl",
+          paddingX: "md",
+          gap: "lg",
+          width: "100%",
+          overflow: "hidden",
+          // marginX: "xs",
         }}
       >
-        <ReactJson
-          collapsed
-          theme={"solarized"}
-          src={{ buildingInsights, dataLayers }}
-        />
+        <Flex
+          sx={{
+            overflowY: "scroll",
+            flex: "1",
+            wordBreak: "break-all",
+            // "& > *": {
+            //   width: "100%",
+            // },
+          }}
+        >
+          <ReactJson
+            collapsed
+            theme={"apathy:inverted"}
+            src={{ buildingInsights, dataLayers }}
+          />
+        </Flex>
       </Flex>
     </Flex>
   );
